@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documente SMC · Audit v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2a;--gold:#c9a84c;--gold-light:#e8c96a;--cream:#f5f0e8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--cream);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(201,168,76,.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(45,106,79,.08) 0%,transparent 50%),repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,.01) 60px,rgba(255,255,255,.01) 61px);pointer-events:none;z-index:0;}
+.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:48px 24px 80px;}
+header{text-align:center;margin-bottom:60px;}
+.badge{display:inline-block;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:6px 16px;border-radius:2px;margin-bottom:20px;}
+h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:700;line-height:1.1;color:var(--cream);margin-bottom:16px;}
+h1 span{color:var(--gold);}
+.subtitle{font-size:15px;color:rgba(245,240,232,.55);max-width:520px;margin:0 auto;line-height:1.6;}
+.tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
+.tab-btn{display:flex;align-items:center;gap:10px;padding:13px 22px;border:none;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:.5px;transition:all .3s ease;position:relative;overflow:hidden;}
+.tab-btn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:currentColor;transform:scaleX(0);transition:transform .3s ease;}
+.tab-btn.active::after{transform:scaleX(1);}
+.tab-btn .icon{font-size:18px;line-height:1;}
+.tab-btn[data-tab="smc"]{background:rgba(201,168,76,.12);color:var(--gold-light);border:1px solid rgba(201,168,76,.3);}
+.tab-btn[data-tab="smc"]:hover,.tab-btn[data-tab="smc"].active{background:rgba(201,168,76,.22);border-color:var(--gold);box-shadow:0 4px 24px rgba(201,168,76,.2);}
+.tab-btn[data-tab="intern"]{background:rgba(45,106,79,.15);color:#74c69d;border:1px solid rgba(45,106,79,.4);}
+.tab-btn[data-tab="intern"]:hover,.tab-btn[data-tab="intern"].active{background:rgba(45,106,79,.28);border-color:#40916c;color:#95d5b2;box-shadow:0 4px 24px rgba(45,106,79,.25);}
+.tab-btn[data-tab="extern"]{background:rgba(27,73,101,.2);color:#90e0ef;border:1px solid rgba(27,73,101,.5);}
+.tab-btn[data-tab="extern"]:hover,.tab-btn[data-tab="extern"].active{background:rgba(27,73,101,.35);border-color:#2e6f9e;color:#ade8f4;box-shadow:0 4px 24px rgba(27,73,101,.3);}
+.tab-btn[data-tab="calendar"]{background:rgba(120,60,140,.18);color:#d4a8f0;border:1px solid rgba(120,60,140,.4);}
+.tab-btn[data-tab="calendar"]:hover,.tab-btn[data-tab="calendar"].active{background:rgba(120,60,140,.3);border-color:#9b5cbf;color:#e2c4fa;box-shadow:0 4px 24px rgba(120,60,140,.25);}
+.panel{display:none;animation:fadeIn .4s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.panel-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:32px;padding:28px 32px;border-radius:6px;border-left:4px solid;}
+.panel-header.gold{background:rgba(201,168,76,.07);border-color:var(--gold);}
+.panel-header.green{background:rgba(45,106,79,.1);border-color:#40916c;}
+.panel-header.teal{background:rgba(27,73,101,.12);border-color:#2e6f9e;}
+.panel-header.purple{background:rgba(120,60,140,.1);border-color:#9b5cbf;}
+.panel-icon{font-size:36px;line-height:1;}
+.panel-header-text h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px;}
+.panel-header-text p{font-size:13px;color:rgba(245,240,232,.55);line-height:1.5;max-width:600px;}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.doc-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:20px 22px;transition:all .25s ease;position:relative;overflow:hidden;cursor:pointer;}
+.doc-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;opacity:0;transition:opacity .3s;}
+.doc-card:hover{background:rgba(255,255,255,.07);transform:translateY(-2px);}
+.doc-card:hover::before{opacity:1;}
+.gold-card::before{background:var(--gold);}
+.green-card::before{background:#40916c;}
+.teal-card::before{background:#2e6f9e;}
+.doc-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.doc-num{font-size:10px;font-weight:500;letter-spacing:1.5px;opacity:.4;padding-top:2px;white-space:nowrap;}
+.doc-title{font-size:14px;font-weight:500;line-height:1.4;color:var(--cream);}
+.doc-ref{font-size:11px;color:rgba(245,240,232,.35);margin-bottom:12px;font-style:italic;}
+.doc-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.resp-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;}
+.gold-tag{background:rgba(201,168,76,.15);color:var(--gold-light);}
+.green-tag{background:rgba(64,145,108,.2);color:#95d5b2;}
+.teal-tag{background:rgba(46,111,158,.2);color:#ade8f4;}
+.gray-tag{background:rgba(255,255,255,.08);color:rgba(245,240,232,.6);}
+.freq-tag{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);color:rgba(245,240,232,.4);letter-spacing:.5px;}
+.template-hint{font-size:10px;color:rgba(201,168,76,.5);margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px;display:flex;align-items:center;gap:5px;}
+.green-card .template-hint{color:rgba(95,213,178,.5);}
+.teal-card .template-hint{color:rgba(144,224,239,.5);}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(5,10,20,.85);z-index:1000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#0f1e30;border:1px solid rgba(255,255,255,.12);border-radius:8px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;animation:modalIn .3s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-head{padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:sticky;top:0;background:#0f1e30;z-index:1;}
+.modal-head-left h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:4px;}
+.modal-head-left .modal-ref{font-size:11px;color:rgba(245,240,232,.35);font-style:italic;}
+.modal-close{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--cream);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.modal-close:hover{background:rgba(255,255,255,.15);}
+.modal-body{padding:24px 32px 32px;}
+.modal-section{margin-bottom:24px;}
+.modal-section h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06);}
+.template-block{background:rgba(255,255,255,.03);border-radius:4px;padding:16px 18px;border:1px solid rgba(255,255,255,.06);}
+.template-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
+.template-row:last-child{border-bottom:none;padding-bottom:0;}
+.tr-num{color:rgba(245,240,232,.25);font-size:11px;min-width:24px;padding-top:1px;}
+.tr-field{color:var(--cream);font-weight:500;min-width:180px;}
+.tr-desc{color:rgba(245,240,232,.5);font-size:12px;flex:1;}
+.tip-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:12px 16px;font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;}
+.tip-box.green{background:rgba(45,106,79,.08);border-color:rgba(64,145,108,.2);}
+.tip-box.teal{background:rgba(27,73,101,.1);border-color:rgba(46,111,158,.2);}
+.tip-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;}
+.tip-box.green .tip-label{color:#74c69d;}
+.tip-box.teal .tip-label{color:#90e0ef;}
+/* CALENDAR */
+.pdca-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
+.pdca-card{border-radius:6px;padding:16px;text-align:center;}
+.pdca-card.p{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);}
+.pdca-card.d{background:rgba(64,145,108,.1);border:1px solid rgba(64,145,108,.2);}
+.pdca-card.c{background:rgba(46,111,158,.1);border:1px solid rgba(46,111,158,.2);}
+.pdca-card.a{background:rgba(120,60,140,.1);border:1px solid rgba(120,60,140,.2);}
+.pdca-letter{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;margin-bottom:4px;}
+.pdca-card.p .pdca-letter{color:#c9a84c;}
+.pdca-card.d .pdca-letter{color:#40916c;}
+.pdca-card.c .pdca-letter{color:#2e6f9e;}
+.pdca-card.a .pdca-letter{color:#9b5cbf;}
+.pdca-name{font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.5;margin-bottom:8px;}
+.pdca-months{font-size:11px;opacity:.6;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.cal-leg-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(245,240,232,.6);}
+.cal-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+@media(max-width:700px){.cal-grid{grid-template-columns:repeat(2,1fr);}}
+.cal-month{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:14px 16px;min-height:130px;}
+.cal-month-name{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);}
+.cal-items{display:flex;flex-direction:column;gap:5px;}
+.cal-item{font-size:11px;padding:4px 8px;border-radius:3px;line-height:1.3;display:flex;align-items:flex-start;gap:5px;}
+.cal-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.c-gold{background:rgba(201,168,76,.13);color:#e8c96a;}
+.c-gold .cal-item-dot{background:#c9a84c;}
+.c-green{background:rgba(64,145,108,.13);color:#95d5b2;}
+.c-green .cal-item-dot{background:#40916c;}
+.c-teal{background:rgba(46,111,158,.13);color:#ade8f4;}
+.c-teal .cal-item-dot{background:#2e6f9e;}
+.c-purple{background:rgba(120,60,140,.13);color:#d4a8f0;}
+.c-purple .cal-item-dot{background:#9b5cbf;}
+/* LEGEND */
+.legend{margin-top:48px;padding:24px 28px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.06);}
+.legend h3{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:16px;}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(245,240,232,.6);}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+footer{text-align:center;margin-top:64px;font-size:11px;color:rgba(245,240,232,.2);letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<div class="badge">ISO 9001:2015 · ISO 19011:2018</div>
+<h1>Documente <span>SMC</span> &amp; Audit</h1>
+<p class="subtitle">Referință rapidă pentru documente, responsabili, șabloane și calendarul anual al calității</p>
+</header>
+<div class="tabs">
+<button class="tab-btn active" data-tab="smc"><span class="icon">🏛️</span> Sistem Management Calitate</button>
+<button class="tab-btn" data-tab="intern"><span class="icon">🔍</span> Audit Intern</button>
+<button class="tab-btn" data-tab="extern"><span class="icon">📋</span> Audit Extern</button>
+<button class="tab-btn" data-tab="calendar"><span class="icon">📅</span> Calendar Anual PDCA</button>
+</div>
+<div class="panel active" id="panel-smc">
+<div class="panel-header gold"><div class="panel-icon">🏛️</div><div class="panel-header-text"><h2>Documente obligatorii — SMC</h2><p>Documentele de bază ale Sistemului de Management al Calității. Click pe orice card pentru structura minimă conformă ISO 9001:2015.</p></div></div>
+<div class="docs-grid" id="grid-smc"></div>
+</div>
+<div class="panel" id="panel-intern">
+<div class="panel-header green"><div class="panel-icon">🔍</div><div class="panel-header-text"><h2>Documente obligatorii — Audit Intern</h2><p>Documente necesare planificării, desfășurării și urmăririi auditului intern. Click pe orice card pentru structura documentului.</p></div></div>
+<div class="docs-grid" id="grid-intern"></div>
+</div>
+<div class="panel" id="panel-extern">
+<div class="panel-header teal"><div class="panel-icon">📋</div><div class="panel-header-text"><h2>Documente necesare — Audit Extern</h2><p>Documente puse la dispoziția auditorului extern. Click pe fiecare card pentru structura documentului și sfaturi practice.</p></div></div>
+<div class="docs-grid" id="grid-extern"></div>
+</div>
+<div class="panel" id="panel-calendar">
+<div class="panel-header purple"><div class="panel-icon">📅</div><div class="panel-header-text"><h2>Calendarul anual al calității — Ciclu PDCA</h2><p>Distribuția temporală a activităților și documentelor SMC structurată pe ciclul Plan–Do–Check–Act.</p></div></div>
+<div class="pdca-strip">
+<div class="pdca-card p"><div class="pdca-letter">P</div><div class="pdca-name">Plan</div><div class="pdca-months">Ian – Mar</div></div>
+<div class="pdca-card d"><div class="pdca-letter">D</div><div class="pdca-name">Do</div><div class="pdca-months">Apr – Iun</div></div>
+<div class="pdca-card c"><div class="pdca-letter">C</div><div class="pdca-name">Check</div><div class="pdca-months">Iul – Sep</div></div>
+<div class="pdca-card a"><div class="pdca-letter">A</div><div class="pdca-name">Act</div><div class="pdca-months">Oct – Dec</div></div>
+</div>
+<div class="cal-legend">
+<div class="cal-leg-item"><div class="cal-dot" style="background:#c9a84c"></div>SMC – Documente sistem</div>
+<div class="cal-leg-item"><div class="cal-dot" style="background:#40916c"></div>Audit Intern</div>
+<div class="cal-leg-item"><div class="cal-dot" style="background:#2e6f9e"></div>Audit Extern / Certificare</div>
+<div class="cal-leg-item"><div class="cal-dot" style="background:#9b5cbf"></div>Analiză Management / Raportare</div>
+</div>
+<div class="cal-grid" id="cal-grid"></div>
+</div>
+<div class="legend">
+<h3>Responsabili — Legendă</h3>
+<div class="legend-grid">
+<div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>Manager / Responsabil Calitate</div>
+<div class="legend-item"><div class="legend-dot" style="background:#40916c"></div>Auditor Intern / Echipa de audit</div>
+<div class="legend-item"><div class="legend-dot" style="background:#2e6f9e"></div>Director General / Top Management</div>
+<div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,.3)"></div>HR / Departamente funcționale</div>
+</div>
+</div>
+<footer>ISO 9001:2015 · ISO 19011:2018 · Referință SMC &amp; Audit · v2.0</footer>
+</div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal" id="modal">
+<div class="modal-head">
+<div class="modal-head-left"><h3 id="modalTitle"></h3><div class="modal-ref" id="modalRef"></div></div>
+<button class="modal-close" id="modalClose">✕</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+</div>
+</div>
+<script>
+const D={
+smc:[
+{id:"SMC-01",title:"Manualul Calității",ref:"ISO 9001: §4.3, §4.4",resp:["👤 Manager Calitate","👤 Director General"],freq:"Anual / la modificări",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Manualul nu mai este obligatoriu în ISO 9001:2015, dar rămâne cel mai util instrument de prezentare a SMC în fața auditorului extern. Redactați-l concis (10–20 pagini) și mențineți-l actualizat la fiecare revizuire majoră.",sec:[["Scopul și domeniul de aplicare","Descrierea organizației, produse/servicii, locații, excluderi justificate (§4.3)"],["Contextul organizației","Factori interni/externi, părți interesate și cerințele lor (§4.1, §4.2)"],["Politica în domeniul calității","Declarație aprobată de top management, angajamente față de cerințe și îmbunătățire"],["Obiectivele calității","Obiective măsurabile, KPI, responsabili, termene (§6.2)"],["Harta proceselor","Diagrama proceselor principale, suport și de management cu interacțiunile"],["Responsabilități și autorități","Organigrama, fișele de post pentru funcțiile relevante pentru calitate (§5.3)"],["Lista documentelor SMC","Index cu toate procedurile, instrucțiunile și formularele în vigoare (§7.5)"],["Referințe normative","ISO 9001:2015, standarde aplicabile domeniului, reglementări legale"]]},
+{id:"SMC-02",title:"Politica în domeniul calității",ref:"ISO 9001: §5.2",resp:["👤 Director General","👤 Manager Calitate"],freq:"Anual / revizuit",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Politica trebuie să fie un document real, nu o declarație generică. Auditorul verifică dacă personalul o cunoaște și dacă obiectivele derivă din ea. Afișați-o fizic la sediu și includeți-o în orice pachet de orientare pentru angajați noi.",sec:[["Antet","Denumire organizație, cod document, versiune, dată, semnătură Director General"],["Declarație de intenție","Angajamentul față de satisfacția clientului și respectarea cerințelor aplicabile"],["Angajamentul față de îmbunătățire continuă","Formulare explicită a angajamentului față de îmbunătățirea SMC"],["Cadrul pentru obiective","Politica furnizează cadrul pentru stabilirea și revizuirea obiectivelor calității"],["Comunicare și disponibilitate","Comunicarea internă și disponibilitatea pentru părțile interesate"],["Aprobare și revizie","Data intrării în vigoare, data reviziei planificate, semnături"]]},
+{id:"SMC-03",title:"Obiectivele calității (cu indicatori)",ref:"ISO 9001: §6.2",resp:["👤 Manager Calitate","👤 Manageri departamente"],freq:"Anual",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Obiectivele trebuie să fie SMART. ISO 9001:2015 cere explicit că progresul trebuie monitorizat și comunicat în organizație. Evitați formulări vagi gen 'îmbunătățirea calității'.",sec:[["Cod / Titlu obiectiv","Identificator unic și denumire clară"],["Legătura cu politica calității","Care angajament din politică susține acest obiectiv"],["Indicator de performanță (KPI)","Metrica specifică și unitatea de măsură"],["Valoare țintă / Baseline","Valoarea actuală și valoarea țintă pentru perioada de raportare"],["Responsabil","Persoana responsabilă de atingerea obiectivului"],["Resurse necesare","Buget, personal, echipamente (§6.2.1 lit. d)"],["Termen de realizare","Data limită sau frecvența de monitorizare"],["Metodă de monitorizare","Cum și când se măsoară progresul"],["Status / Progres","On track / Risc / Realizat"]]},
+{id:"SMC-04",title:"Procedura control documente și înregistrări",ref:"ISO 9001: §7.5",resp:["👤 Responsabil Calitate"],freq:"La implementare / revizii",cc:"gold-card",tags:["gold-tag"],tip:"gold",sfat:"Verificată sistematic în orice audit. Asigurați că descrie clar: cine aprobă, unde se stochează, cum se identifică versiunile, cum se retrag versiunile depășite și cum se protejează documentele externe (legi, standarde).",sec:[["Scop și domeniu","Ce documente și înregistrări acoperă procedura"],["Responsabilități","Cine elaborează, verifică, aprobă, distribuie și arhivează"],["Identificarea documentelor","Sistemul de codificare, versiune, dată, pagini"],["Elaborare și aprobare","Fluxul de aprobare, semnături, verificare conformitate"],["Distribuire și acces","Canale de distribuție, lista de difuzare, acces electronic vs. fizic"],["Actualizare și revizie","Cum se inițiază, cum se identifică modificările față de versiunea anterioară"],["Retragerea versiunilor depășite","Procedura de retragere, marcaj ANULAT"],["Controlul documentelor externe","Standarde, legi, specificații clienți"],["Arhivare","Locație, perioadă de păstrare, responsabil arhivă"]]},
+{id:"SMC-05",title:"Procedura management riscuri și oportunități",ref:"ISO 9001: §6.1",resp:["👤 Manager Calitate","👤 Echipa management"],freq:"Anual / la context nou",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"ISO 9001:2015 nu impune o metodologie specifică, dar trebuie să demonstrați că procesul este sistematic. Metode comune: matrice probabilitate×impact, FMEA, SWOT. Conectați riscurile cu obiectivele și procesele.",sec:[["Scop și domeniu","Ce procese și contexte acoperă managementul riscului"],["Metodologia de identificare","Tehnica utilizată: SWOT, FMEA, brainstorming, PESTLE"],["Criterii de evaluare","Scale probabilitate (1-5) și impact (1-5), formula calcul scor"],["Niveluri de acceptabilitate","Ce scoruri sunt acceptabile, tolerabile sau necesită tratament"],["Identificare și descriere risc","Cod, descriere, proces afectat, cauze posibile"],["Evaluarea riscului","Probabilitate, impact, scor, nivel Scăzut/Mediu/Ridicat"],["Tratarea riscului","Evitare, reducere, transfer, acceptare + acțiuni"],["Identificarea oportunităților","Proces similar pentru oportunități"],["Monitorizare și revizuire","Frecvența, indicatori, responsabil"]]},
+{id:"SMC-06",title:"Registrul riscurilor și oportunităților",ref:"ISO 9001: §6.1",resp:["👤 Responsabil Calitate","👤 Manageri"],freq:"Semestrial",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Registrul este un document viu — auditorul verifică nu doar că există, ci că este actualizat periodic și că acțiunile de tratare sunt implementate. Includeți o coloană 'Data ultimei revizuiri'.",sec:[["Cod risc / oportunitate","Identificator unic (ex: R-01, O-01)"],["Tip","Risc sau Oportunitate"],["Proces/domeniu afectat","Procesul căruia i se asociază"],["Descrierea","Formulare: 'Dacă... atunci... cu consecința...'"],["Cauze posibile","Factorii care pot genera riscul"],["Probabilitate (1-5)","Scala și valoarea atribuită"],["Impact (1-5)","Scala și valoarea atribuită"],["Scor (P×I)","Valoarea și nivelul: Scăzut/Mediu/Ridicat/Critic"],["Acțiune de tratare","Măsura planificată"],["Responsabil","Persoana responsabilă"],["Termen","Data limită pentru implementare"],["Status","Planificat / În curs / Implementat"],["Data revizuirii","Data ultimei actualizări"]]},
+{id:"SMC-07",title:"Analiza efectuată de management (PV)",ref:"ISO 9001: §9.3",resp:["👤 Director General","👤 Manager Calitate"],freq:"Minim anual",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Unul din cele mai verificate documente în auditul extern. §9.3.2 specifică exact intrările obligatorii iar §9.3.3 ieșirile. Asigurați că PV-ul adresează explicit toate punctele, nu generic.",sec:["INTRĂRI OBLIGATORII §9.3.2",["Status acțiunilor din analiza anterioară","Ce s-a decis, ce s-a implementat, ce este în curs"],["Modificări ale contextului intern/extern","Schimbări legislative, de piață, organizaționale"],["Performanța SMC","KPI calitate, satisfacție client, neconformități, audituri, obiective"],["Adecvarea resurselor","Suficiența resurselor umane, financiare, infrastructurii"],["Eficacitatea acțiunilor pentru riscuri","Stadiul din registrul riscurilor"],["Oportunități de îmbunătățire","Sugestii, inovații, benchmarking"],"IEȘIRI OBLIGATORII §9.3.3",["Decizii privind îmbunătățirea","Acțiuni concrete, responsabili, termene"],["Decizii privind resursele","Alocare buget, personal, echipamente"],["Revizuiri ale politicii/obiectivelor","Dacă se modifică politica sau obiectivele"]]},
+{id:"SMC-08",title:"Fișe de procese / Harta proceselor",ref:"ISO 9001: §4.4",resp:["👤 Manager Calitate","👤 Proprietari de proces"],freq:"La modificări de proces",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"O fișă de proces bine redactată elimină ambiguitatea la audit — auditorul vede exact ce intră, ce iese, cine e responsabil și cum se măsoară. Mențineți câte o fișă per proces principal.",sec:[["Cod și denumire proces","Identificator unic și titlu"],["Tipul procesului","Management / Realizare / Suport"],["Proprietar de proces","Funcția și persoana responsabilă"],["Intrări (INPUT)","Ce declanșează procesul"],["Activități principale","Pașii cheie ai procesului"],["Ieșiri (OUTPUT)","Rezultatele procesului"],["Clienți ai procesului","Cine primește ieșirile"],["Furnizori ai procesului","Cine furnizează intrările"],["Indicatori de performanță (KPI)","Metrice, valori țintă, frecvență monitorizare"],["Riscuri asociate","Riscurile principale identificate"],["Documente asociate","Proceduri, instrucțiuni, formulare aferente"]]},
+{id:"SMC-09",title:"Proceduri operaționale de sistem (POS)",ref:"ISO 9001: §8",resp:["👤 Responsabil Calitate","👤 Șefi compartiment"],freq:"La modificări",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"O procedură bună răspunde la 5 întrebări: CE, CINE, CÂND/CUM, CU CE și CUM SE ÎNREGISTREAZĂ. Testați cu un angajat nou dacă poate urmări procedura fără explicații verbale suplimentare.",sec:[["Antet","Cod, titlu, versiune, dată, elaborat/verificat/aprobat de"],["Scop","Ce activitate reglementează și de ce e necesară"],["Domeniu de aplicare","La ce procese/compartimente/situații se aplică"],["Responsabilități","Tabel: funcție → responsabilitate"],["Descrierea activității","Pași numerotați: acțiune, responsabil, document, înregistrare"],["Diagrama de flux","Flowchart vizual — recomandat pentru procese complexe"],["Înregistrări generate","Lista formularelor și locul de arhivare"],["Indicatori","KPI-uri și frecvența de raportare"]]},
+{id:"SMC-10",title:"Plan de comunicare internă / externă",ref:"ISO 9001: §7.4",resp:["👤 Manager Calitate","👤 HR / Secretariat"],freq:"Anual",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"ISO 9001:2015 cere să stabiliți: CE, CÂND, CUI, CINE și CUM comunicați. Un tabel simplu cu aceste 5 coloane, actualizat anual, este suficient pentru audit.",sec:[["Subiect / Mesaj","Descrierea informației care se comunică"],["Tip","Internă sau Externă"],["Destinatari","Cui i se adresează"],["Responsabil","Cine emite comunicarea"],["Canal / Mijloc","Email, întâlnire, panou, intranet, site etc."],["Frecvență","Când are loc"],["Documentare","Cum se înregistrează că a avut loc"]]},
+{id:"SMC-11",title:"Înregistrări competență, instruire, conștientizare",ref:"ISO 9001: §7.2, §7.3",resp:["👤 HR / Responsabil Calitate"],freq:"La fiecare instruire",cc:"gold-card",tags:["gray-tag"],tip:"gold",sfat:"Auditorul selectează aleator 3–5 angajați cu rol în calitate și le verifică dosarele. Competența se demonstrează prin: educație, training, experiență. Evaluarea eficacității instruirii trebuie documentată.",sec:[["Matricea competențelor","Tabel: post × competență necesară × nivel cerut × nivel actual"],["Plan anual de instruire","Lista cursurilor planificate, grupele vizate, responsabili"],["Fișa de instruire (per sesiune)","Titlu, data, lector, participanți (semnături), conținut, durată"],["Evaluarea eficacității","Test, observare la locul de muncă — rezultat: eficace/neeficace"],["Dosarul individual","Diplome, certificate, CV, rapoarte de evaluare"],["Conștientizarea privind calitatea","Dovezi că angajații cunosc politica, obiectivele și rolul lor"]]},
+{id:"SMC-12",title:"Procedura acțiuni corective și preventive (CAPA)",ref:"ISO 9001: §10.2",resp:["👤 Responsabil Calitate","👤 Responsabili departamente"],freq:"La neconformitate",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"CAPA este nucleul îmbunătățirii continue. Greșeala frecventă: confundarea acțiunii corective (care elimină CAUZA) cu corecția (care elimină neconformitatea). ISO 9001:2015 cere analiza cauzei rădăcină — utilizați: 5 De ce, Ishikawa, Pareto.",sec:[["Identificarea neconformității","Descrierea problemei, sursa, data constatării"],["Corecție imediată","Acțiunea de eliminare a NC existente (nu a cauzei)"],["Analiza cauzei rădăcină","Tehnica utilizată și cauza identificată"],["Acțiunea corectivă","Măsura care elimină cauza rădăcină"],["Responsabil implementare","Funcția și persoana"],["Termen","Data limită clară și realistă"],["Verificarea implementării","Cine, cum și când verifică"],["Evaluarea eficacității","La 30/60/90 zile: a dispărut cauza?"],["Închiderea CAPA","Semnătură + data închiderii"]]},
+{id:"SMC-13",title:"Fișa / Raportul de neconformitate",ref:"ISO 9001: §8.7, §10.2",resp:["👤 Responsabil Calitate","👤 Angajat constatator"],freq:"La apariție",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"Fișa trebuie să fie simplă și accesibilă oricărui angajat. Dacă e prea complexă, nu va fi completată. Un format pe o pagină cu câmpuri clare este ideal.",sec:[["Nr. înregistrare / Cod","NC-2025-001"],["Data constatării","Data identificării neconformității"],["Constatat de","Funcția și numele"],["Tipul neconformității","Produs / Proces / SMC / Reclamație client"],["Descrierea","CE s-a constatat, unde, în ce condiții — faptic"],["Dovezi / Referință","Nr. lot, document, foto care atestă NC"],["Cerință nerespectată","Clauza ISO, procedura sau cerința clientului încălcată"],["Corecție imediată","Ce s-a făcut imediat cu produsul/serviciul"],["Decizia privind produsul","Reprelucrare / Derogare / Rebut / Returnare"],["Referință CAPA","Nr. fișei CAPA deschise"]]},
+{id:"SMC-14",title:"Procedura monitorizare și măsurare a proceselor",ref:"ISO 9001: §9.1",resp:["👤 Manager Calitate","👤 Proprietari de proces"],freq:"Trimestrial",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"§9.1 cere să determinați CE, CÂND, CUM și CINE monitorizează și măsoară. Stabiliți criterii clare de acceptare — fără criteriu, monitorizarea nu are valoare.",sec:[["Obiectul monitorizării","Procesul sau indicatorul monitorizat"],["Indicatorul (KPI)","Denumire, unitate de măsură, formulă"],["Valoare țintă","Valoarea sau intervalul acceptabil"],["Frecvența","Zilnic / Săptămânal / Lunar / Trimestrial"],["Responsabil colectare","Funcția și persoana"],["Sursa datelor","De unde provin: sistem IT, inspecție, sondaj, raport"],["Responsabil analiză","Cine interpretează și raportează"],["Acțiuni la deviere","Ce se face dacă indicatorul iese din interval"]]},
+{id:"SMC-15",title:"Procedura evaluare satisfacție client",ref:"ISO 9001: §9.1.2",resp:["👤 Responsabil Calitate","👤 Marketing / Vânzări"],freq:"Semestrial / Anual",cc:"gold-card",tags:["gold-tag","gray-tag"],tip:"gold",sfat:"ISO 9001:2015 nu specifică metoda. Important: trebuie să fie sistematică și să genereze date analizabile. Includeți și analiza reclamațiilor și returnărilor ca surse complementare.",sec:[["Metode de colectare","Chestionar, interviu, NPS, analiză reclamații, date vânzări repetate"],["Frecvența evaluării","Când și cât de des"],["Eșantion / populație","Cine este chestionat"],["Instrumentul de evaluare","Chestionarul utilizat (atașat ca anexă)"],["Indicatori sintetici","Scor satisfacție global, NPS, rata reclamațiilor"],["Raportarea rezultatelor","Cui se raportează: Management, Analiză de management"],["Acțiuni de îmbunătățire","Cum se transformă feedback-ul negativ în acțiuni"]]},
+{id:"SMC-16",title:"Lista furnizorilor aprobați / Evaluare furnizori",ref:"ISO 9001: §8.4",resp:["👤 Responsabil Achiziții","👤 Manager Calitate"],freq:"Anual",cc:"gold-card",tags:["gray-tag","gold-tag"],tip:"gold",sfat:"§8.4 cere să controlați furnizorii externi cu impact asupra calității. Nivelul de control depinde de impactul furnizorului. Diferențiați între furnizori critici și noncritici.",sec:["LISTA FURNIZORILOR APROBAȚI",["Cod furnizor","Identificator unic"],["Denumire / CUI","Date de identificare"],["Produse / Servicii furnizate","Ce furnizează"],["Categoria","Critic / Important / Necritic"],["Status curent","Aprobat / Condiționat / Suspendat"],["Data ultimei evaluări","Data evaluării periodice"],["Scor evaluare","Rezultatul ultimei evaluări"],"CRITERII FIȘĂ EVALUARE",["Calitate produse livrate","% produse conforme, neconformități înregistrate"],["Respectarea termenelor","% livrări la timp"],["Răspuns la probleme","Viteza și calitatea răspunsului la reclamații"],["Certificări deținute","Certificări relevante"]]},
+],
+intern:[
+{id:"AI-01",title:"Programul anual de audit intern",ref:"ISO 9001: §9.2 / ISO 19011: §5.4",resp:["👤 Manager Calitate"],freq:"Anual (ianuarie)",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Programul trebuie aprobat de top management și să acopere toate procesele și cerințele ISO 9001 cel puțin o dată pe an. Planificați auditul cu 4–6 săptămâni înainte de auditul de supraveghere extern.",sec:[["Obiectivele programului","Ce urmăresc auditurile: conformitate, eficacitate, îmbunătățire"],["Domeniu de aplicare","Ce procese, funcții, locații sunt acoperite"],"TABEL PLANIFICARE",["Nr. misiune","AI-2025-01 etc."],["Procesul / Departamentul","Domeniu auditat"],["Clauze ISO vizate","§7.2, §8.1 etc."],["Perioada planificată","Luna / trimestrul"],["Auditor șef","Funcția și numele"],["Motivul includerii","Standard, rezultate anterioare, risc"],["Criterii selecție auditor","Independența, competența dovedită"]]},
+{id:"AI-02",title:"Procedura de audit intern",ref:"ISO 9001: §9.2 / ISO 19011",resp:["👤 Manager Calitate"],freq:"La implementare / revizii",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Aceasta este procedura-cadru pentru toate misiunile. Odată redactată și aprobată, se aplică sistematic. ISO 19011:2018 este referința tehnică.",sec:[["Scop și domeniu","Ce reglementează și cui se aplică"],["Definiții","Audit, auditor, auditat, constatare, NC, observație, OI"],"FAZA 1 — PREGĂTIRE",["Notificare, plan misiune, checklist, analiză documente anterioare","Activitățile de pregătire ale echipei de audit"],"FAZA 2 — DESFĂȘURARE",["Ședința de deschidere, colectare dovezi, ședința de închidere","Activitățile din ziua auditului"],"FAZA 3 — RAPORTARE",["Redactarea raportului, clasificarea constatărilor, transmiterea","Procesul de finalizare a misiunii"],"FAZA 4 — URMĂRIRE",["CAPA, monitorizarea implementării, verificarea eficacității","Ciclul post-audit"],["Clasificarea constatărilor","NC majoră / minoră, Observație, Oportunitate Îmbunătățire"],["Calificarea auditorului","Instruire, experiență, independență, evaluare periodică"]]},
+{id:"AI-03",title:"Notificarea de audit (convocare)",ref:"ISO 19011: §6.3.2",resp:["👤 Auditor Șef"],freq:"Cu min. 5 zile înainte",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"5–10 zile lucrătoare este minimul. Includeți clar ce documente trebuie pregătite — reduce semnificativ timpul petrecut în audit.",sec:[["Destinatar","Funcția și numele responsabilului domeniului auditat"],["Domeniul auditat","Procesul, departamentul, locația"],["Clauze ISO vizate","§____, §____ etc."],["Data și ora auditului","Data, ora de începere și finalizare"],["Echipa de audit","Auditor șef, auditori, observatori"],["Documente solicitate","Lista documentelor pe care auditul le va verifica"],["Persoana de contact","Cine va fi gazdă din partea auditatului"]]},
+{id:"AI-04",title:"Planul de audit intern (per misiune)",ref:"ISO 19011: §6.3.2",resp:["👤 Auditor Șef"],freq:"Înainte de fiecare audit",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Planul ghidează echipa oră cu oră. Un plan bun economisește timp și asigură că toate domeniile sunt acoperite. Distribuiți-l auditaților cu minimum 3 zile înainte.",sec:[["Identificare misiune","Nr. misiune, data, domeniu, versiune plan"],["Obiectivele auditului","Ce urmărește această misiune specifică"],["Criteriile","ISO 9001:2015 + proceduri SMC + cerințe legale"],"PROGRAM DETALIAT — TABEL ORAR",["Ora","Intervalul orar"],["Activitate","Ședință deschidere / Verificare documente / Interviuri / Teren"],["Domeniu / Clauză","Procesul și clauza ISO verificate"],["Auditor responsabil","Cine conduce activitatea"],["Persoana auditată","Funcția și numele"],["Ședința de închidere","Ora planificată, participanți"]]},
+{id:"AI-05",title:"Liste de verificare / Checkliste audit",ref:"ISO 19011: §6.3.3",resp:["👤 Echipa de audit"],freq:"La fiecare misiune",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Checklistele sunt instrumente de lucru, nu scop în sine. Formulați întrebările deschis: 'Cum demonstrați că...?' nu 'Aveți procedura X?'. Nu limitați curiozitatea auditorului.",sec:[["Identificare","Nr. misiune, domeniu, auditor, data, clauze vizate"],"STRUCTURA CHECKLIST — COLOANE",["Cerința ISO / internă","Clauza ISO sau referința la procedura internă"],["Întrebarea de audit","Formulată deschis, orientată pe dovezi"],["Dovezi verificate","Documente, înregistrări, observații examinate"],["Constatare","Conform / Neconform / Observație / OI"],["Note auditor","Observații libere, referințe la dovezi"],"DOMENII OBLIGATORII",["Controlul documentelor","§7.5"],["Competența personalului","§7.2"],["Controlul operațional","§8.1"],["Monitorizare și măsurare","§9.1"],["Neconformități și CAPA","§10.2"]]},
+{id:"AI-06",title:"Note de audit / Dovezi colectate",ref:"ISO 19011: §6.4.7",resp:["👤 Auditori"],freq:"În timpul auditului",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Regula de aur: orice constatare trebuie să aibă o dovadă auditabilă (document văzut, persoană intervievată, înregistrare verificată). Notele nu trebuie să fie perfecte, dar trebuie să susțină raportul.",sec:[["Identificare","Nr. misiune, auditor, data, domeniu, ora"],["Tip dovadă","Document / Înregistrare / Interviu / Observare fizică"],["Descrierea dovezii","Ce anume s-a examinat: titlu, versiune, dată, conținut relevant"],["Referința documentului","Cod, locație fizică sau digitală"],["Persoana intervievată","Funcția și numele (dacă dovada provine dintr-un interviu)"],["Constatarea provizorie","Conform / Neconform / Observație"],["Cerința nerespectată (dacă NC)","Clauza ISO sau procedura internă"],["Clasificare","NC Majoră / NC Minoră / Observație / OI"]]},
+{id:"AI-07",title:"Raportul de audit intern",ref:"ISO 9001: §9.2.2 / ISO 19011: §6.5",resp:["👤 Auditor Șef"],freq:"Max. 5 zile după audit",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Trebuie să fie obiectiv și bazat pe dovezi. Auditorul extern îl analizează în detaliu. Constatările negative se formulează faptic — fără judecăți de valoare. Constatările pozitive sunt la fel de importante.",sec:[["Pagina de titlu","Nr. raport, misiune, domeniu, data auditului, data raportului"],["Rezumat executiv","Concluzie generală: SMC-ul domeniului este / nu este conform"],["Obiective, domeniu, criterii","Reiterarea scopului conform planului"],["Metodologia","Interviuri, verificare documente, observare teren, eșantion"],["Constatări pozitive","Ce funcționează bine"],["Neconformități majore","Descriere, dovezi, cerința nerespectată"],["Neconformități minore","Idem, mai concise"],["Observații","Constatări care nu sunt NC dar merită atenție"],["Oportunități de îmbunătățire","Sugestii fără caracter obligatoriu"],["Concluzie","Dacă se recomandă CAPA și termenul"],["Anexe","Checkliste completate, dovezi selectate"]]},
+{id:"AI-08",title:"Fișa de neconformitate audit intern (RNC)",ref:"ISO 9001: §10.2",resp:["👤 Auditor","👤 Responsabil Calitate"],freq:"La constatare",cc:"green-card",tags:["green-tag","gray-tag"],tip:"green",sfat:"Se completează în timpul sau imediat după audit, se semnează de auditor și auditat, și declanșează procesul CAPA. Numerotați secvențial în cadrul misiunii: RNC-AI2025-01-001.",sec:[["Nr. RNC","Identificator unic"],["Nr. misiune","Referința misiunii din care provine"],["Tipul neconformității","Majoră / Minoră"],["Cerința nerespectată","Clauza ISO + procedura internă specifică"],["Descrierea","Ce s-a constatat — faptic, cu referință la dovezi"],["Dovezile constatării","Documentul/înregistrarea care atestă NC"],["Semnătura auditorului","Confirmare constatare"],["Semnătura auditatului","Luare la cunoștință"],["Răspunsul auditatului","Cauza propusă și acțiunea corectivă"],["Termen propus","Data propusă pentru implementare"],["Verificare și închidere RNC","Data, semnătură auditor șef, concluzie eficacitate"]]},
+{id:"AI-09",title:"Plan de acțiuni corective post-audit (CAPA)",ref:"ISO 9001: §10.2",resp:["👤 Auditat / Responsabil Dept.","👤 Responsabil Calitate"],freq:"Max. 10 zile după raport",cc:"green-card",tags:["gray-tag","green-tag"],tip:"green",sfat:"Planul CAPA consolidează toate RNC-urile într-un document de urmărire centralizat. Termenele trebuie să fie realiste dar ferme. Fără verificare documentată a eficacității, acțiunea nu este considerată închisă.",sec:["TABEL CAPA — COLOANE",["Nr. RNC","Referința la fișa RNC"],["Descrierea NC","Rezumat (din RNC)"],["Cauza rădăcină","Rezultatul analizei (5 De ce / Ishikawa)"],["Corecție","Acțiunea imediată pentru eliminarea NC"],["Acțiunea corectivă","Măsura care elimină cauza rădăcină"],["Responsabil","Funcția și persoana"],["Termen","Data limită"],["Status","Planificat / În curs / Implementat"],["Dovezi implementare","Ce demonstrează implementarea"],["Verificat de","Manager Calitate — funcție, nume, data"],["Eficacitate","DA / NU — cu justificare"],["Data închiderii","Data oficială"]]},
+{id:"AI-10",title:"Urmărirea implementării acțiunilor corective",ref:"ISO 9001: §10.2.1",resp:["👤 Manager Calitate"],freq:"Conform termenelor stabilite",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"Urmărirea este faza cea mai neglijată în ciclul CAPA. ISO 9001:2015 cere explicit verificarea că acțiunile sunt implementate și eficace. Planificați vizite de verificare în calendar.",sec:[["Referință","Nr. plan CAPA și nr. misiune audit"],"TABEL URMĂRIRE",["Nr. acțiune","Din planul CAPA"],["Data verificării","Când a efectuat Manager Calitate verificarea"],["Metoda","Analiza documentelor / Observare / Interviu"],["Dovezi examinate","Ce a verificat concret"],["Concluzie","Implementată / Parțial / Neimplementată"],["Eficacitate","Cauza a fost eliminată? DA/NU cu justificare"],["Acțiuni suplimentare","Dacă acțiunea nu a fost eficace, ce urmează"]]},
+{id:"AI-11",title:"Dosarul / Arhiva misiunii de audit intern",ref:"ISO 19011: §6.6",resp:["👤 Manager Calitate"],freq:"Minim 3 ani",cc:"green-card",tags:["green-tag"],tip:"green",sfat:"ISO 19011:2018 recomandă păstrarea înregistrărilor de audit minim până după auditul următor, recomandat 3 ani sau conform cerințelor sectoriale.",sec:["CUPRINSUL DOSARULUI",["1. Programul anual (extras)","Pagina relevantă din programul anual"],["2. Notificarea de audit","Copia notificării și dovada recepției"],["3. Planul misiunii","Documentul de planificare"],["4. Checkliste completate","Listele de verificare cu constatările"],["5. Note de audit / Dovezi","Documentele de lucru, fotografii, copii"],["6. Raportul de audit","Documentul final aprobat"],["7. RNC-uri emise","Toate fișele de neconformitate"],["8. Planul CAPA","Documentul de răspuns"],["9. Dovezi implementare CAPA","Ce atestă implementarea"],["10. Verificarea eficacității","Documentul de urmărire și concluzie"],["Termen de păstrare","Minim 3 ani sau conform politicii organizației"]]},
+{id:"AI-12",title:"Înregistrări calificare / independență auditori",ref:"ISO 9001: §9.2 / ISO 19011: §7",resp:["👤 Manager Calitate","👤 HR"],freq:"La numire / actualizare",cc:"green-card",tags:["green-tag","gray-tag"],tip:"green",sfat:"Auditorul extern verifică dacă auditorii interni sunt competenți și independenți. Independența = auditorul nu auditează propria activitate. Documentați criteriile de selecție și dovezile de competență.",sec:["FIȘA AUDITORULUI INTERN",["Formare inițială","Cursuri finalizate — titlu, dată, emitent, durată"],["Certificate","Auditor intern ISO 9001, alte certificate relevante"],["Audituri efectuate","Tabel: nr. misiune, domeniu, rol, data"],["Evaluarea competenței","Supervizare, test, feedback — rezultat"],"DECLARAȚIE DE INDEPENDENȚĂ (per misiune)",["Declarație","Confirm că nu am responsabilitate directă în domeniul ___ auditat"],["Semnătura auditorului","Data + semnătură"],["Confirmare Manager Calitate","Că independența a fost verificată înainte de misiune"]]},
+],
+extern:[
+{id:"AE-01",title:"Cererea de certificare / Chestionarul pre-audit",ref:"Cerință organism de certificare",resp:["👤 Director General","👤 Manager Calitate"],freq:"La inițierea certificării",cc:"teal-card",tags:["teal-tag","gray-tag"],tip:"teal",sfat:"Fiecare organism de certificare (SRAC, Bureau Veritas, TÜV, DNV) are propriul format. Pregătiți aceste date în avans. O cerere incompletă sau cu informații inexacte poate întârzia procesul.",sec:[["Date de identificare","Denumire, CUI, formă juridică, adresă sediu și puncte de lucru"],["Date contact","Persoana de contact, funcție, email, telefon"],["Domeniul de activitate","Cod CAEN, produse/servicii principale"],["Standardul solicitat","ISO 9001:2015"],["Domeniul de certificare (scope)","Formularea exactă: ce activități, ce locații"],["Numărul de angajați","Total + pe locații (relevant pentru calculul zilelor-om)"],["SMC implementat de","Data de la care este implementat SMC"],["Confirmare audituri interne","Cel puțin un ciclu complet efectuat"],["Confirmare analiză management","Realizată"],["Activități excluse","Activități din standard care nu se aplică și justificarea"],["Semnătură Director General","Data și semnătura"]]},
+{id:"AE-02",title:"Manualul Calității (versiunea aprobată)",ref:"ISO 9001: §4.3",resp:["👤 Manager Calitate"],freq:"Transmis înainte de audit",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"Transmiteți cu cel puțin 2 săptămâni înainte de auditul de etapă 1. Auditorul extern îl studiază înainte de vizita la sediu. Versiunea transmisă trebuie să fie cea în vigoare, cu domeniu identic cererii de certificare.",sec:[["→ Structura detaliată la SMC-01","Manualul Calității are aceeași structură ca documentul SMC-01 din tab-ul Sistem Management Calitate"]]},
+{id:"AE-03",title:"Harta / Lista proceselor și interacțiunilor",ref:"ISO 9001: §4.4",resp:["👤 Manager Calitate"],freq:"Documentat / actualizat",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"Unul dintre primele documente analizate în auditul extern. Demonstrează că înțelegeți abordarea bazată pe proces. Includeți cele 3 categorii și săgețile de interacțiune.",sec:["DIAGRAMA HĂRȚII PROCESELOR",["Procese de management","Planificarea strategică, Analiza de management, Comunicare"],["Procese de realizare","Procesele care produc direct valoare pentru client"],["Procese suport","HR, IT, Achiziții, Mentenanță, Controlul documentelor"],"LISTA PROCESELOR — TABEL",["Cod / Denumire / Categorie","Identificare și tip"],["Proprietar de proces","Funcția responsabilă"],["Intrări și ieșiri principale","Ce primește și ce produce procesul"],["Procese furnizoare / cliente","Interacțiunile cu celelalte procese"]]},
+{id:"AE-04",title:"Politica și obiectivele calității",ref:"ISO 9001: §5.2, §6.2",resp:["👤 Director General","👤 Manager Calitate"],freq:"Versiunea în vigoare",cc:"teal-card",tags:["gray-tag","teal-tag"],tip:"teal",sfat:"Auditorul verifică dacă politica este afișată, dacă personalul o cunoaște (prin interviuri directe) și dacă obiectivele sunt derivate din politică și monitorizate. Pregătiți dovezi de comunicare internă.",sec:[["→ Structura detaliată la SMC-02 și SMC-03","Politica: structura SMC-02 / Obiectivele: structura SMC-03"]]},
+{id:"AE-05",title:"Analiza de context și a părților interesate",ref:"ISO 9001: §4.1, §4.2",resp:["👤 Manager Calitate","👤 Top Management"],freq:"Anual / revizuit",cc:"teal-card",tags:["teal-tag","gray-tag"],tip:"teal",sfat:"Punct de audit frecvent în certificările ISO 9001:2015. O analiză SWOT/PESTLE bine documentată, revizuită anual, cu conexiuni la riscuri și obiective, este dovada așteptată.",sec:["CONTEXTUL EXTERN (§4.1)",["Factori PESTLE identificați","Politic, Economic, Social, Tehnologic, Legal, Mediu"],["Tendințe de piață","Factori ai industriei cu impact asupra calității"],["Cerințe legale și de reglementare","Legislație aplicabilă, standarde obligatorii"],"CONTEXTUL INTERN (§4.1)",["Capabilități organizaționale","Resurse, cunoștințe, procese, cultura organizațională"],"ANALIZA PĂRȚILOR INTERESATE (§4.2)",["Identificarea PI","Clienți, furnizori, angajați, autorități, acționari, societate"],["Cerințele relevante","Ce așteaptă de la organizație — filtrat pentru SMC"],["Monitorizarea cerințelor","Cum urmăriți dacă cerințele se schimbă"],["Conexiunea cu riscurile","Care factori au generat riscuri în registrul de riscuri"]]},
+{id:"AE-06",title:"Registrul riscurilor și oportunităților",ref:"ISO 9001: §6.1",resp:["👤 Responsabil Calitate"],freq:"Versiunea curentă",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"Transmiteți versiunea actualizată. Auditorul verifică că riscurile derivă din analiza de context și că există dovezi de monitorizare periodică. Structura detaliată la SMC-06.",sec:[["→ Structura detaliată la SMC-06","Registrul riscurilor are aceeași structură ca documentul SMC-06"]]},
+{id:"AE-07",title:"Rapoartele de audit intern (ultimul ciclu)",ref:"ISO 9001: §9.2",resp:["👤 Manager Calitate"],freq:"Ultimele 12 luni",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"Puneți la dispoziție rapoartele complete, nu rezumate. Auditorul verifică: toate procesele acoperite, constatările documentate, CAPA generate și CAPA-uri închise. Lipsa auditurilor interne = NC majoră.",sec:[["→ Structura detaliată la AI-07","Raportul de audit intern are structura documentului AI-07"]]},
+{id:"AE-08",title:"Procesele-verbale de analiză de management",ref:"ISO 9001: §9.3",resp:["👤 Director General","👤 Manager Calitate"],freq:"Ultimele 12 luni",cc:"teal-card",tags:["gray-tag","teal-tag"],tip:"teal",sfat:"Auditorul verifică că analiza a abordat toate intrările din §9.3.2 și că a generat ieșiri concrete din §9.3.3. Un PV generic fără detalii nu este acceptabil. Structura detaliată la SMC-07.",sec:[["→ Structura detaliată la SMC-07","PV Analiză de management are structura documentului SMC-07"]]},
+{id:"AE-09",title:"Înregistrări neconformități și CAPA",ref:"ISO 9001: §8.7, §10.2",resp:["👤 Responsabil Calitate"],freq:"Ultimele 12 luni",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"Auditorul nu caută absența NC — ci că sistemul funcționează: NC identificate, analizate, tratate, eficacitate verificată. O organizație fără nicio NC în 12 luni ridică semne de întrebare.",sec:[["Registrul centralizat al NC","Lista completă: cod, dată, descriere, sursa, status"],["Fișe individuale RNC","Documentele complete pentru NC semnificative"],["Planurile CAPA","Cu cauze rădăcină identificate"],["Dovezi de implementare","Ce s-a schimbat: proceduri revizuite, instruiri"],["Dovezi de eficacitate","NC nu a reapărut, cauza eliminată"],["Statistici NC","Nr. NC per lună, tendință, procese cu frecvență ridicată"],["Decizii produse neconforme","§8.7: ce s-a decis pentru produsele/serviciile neconforme"]]},
+{id:"AE-10",title:"Înregistrări satisfacție client",ref:"ISO 9001: §9.1.2",resp:["👤 Responsabil Calitate","👤 Dept. Relații Clienți"],freq:"Ultimele 12 luni",cc:"teal-card",tags:["teal-tag","gray-tag"],tip:"teal",sfat:"Puneți la dispoziție atât instrumentul de evaluare cât și rezultatele și dovada că rezultatele au generat acțiuni. Auditorul verifică că metoda este sistematică.",sec:[["Instrumentul de evaluare","Chestionarul sau grila utilizată"],["Raportul de analiză","Scor mediu, distribuție, tendință față de perioada anterioară"],["Registrul reclamațiilor","Lista completă: cod, dată, client, descriere, status"],["Acțiuni din feedback","Cum s-a îmbunătățit organizația"],["Indicatori sintetici","Scor satisfacție, NPS, rata reclamațiilor"],["Prezentarea în analiza de management","Dovada că datele au fost raportate în PV"]]},
+{id:"AE-11",title:"Înregistrări instruire și competență personal",ref:"ISO 9001: §7.2",resp:["👤 HR / Manager Calitate"],freq:"Actualizat curent",cc:"teal-card",tags:["gray-tag"],tip:"teal",sfat:"Auditorul selectează aleator 3–5 angajați cu rol în calitate și verifică dosarele. Asigurați că pentru fiecare post există: cerințe de competență, dovezi că le îndeplinesc și dovezi de instruire periodică.",sec:[["→ Structura detaliată la SMC-11","Structura înregistrărilor de competență este detaliată la SMC-11"]]},
+{id:"AE-12",title:"Proceduri documentate (POS-uri) relevante",ref:"ISO 9001: §8",resp:["👤 Responsabil Calitate","👤 Șefi compartiment"],freq:"Versiunile în vigoare",cc:"teal-card",tags:["teal-tag","gray-tag"],tip:"teal",sfat:"Nu e obligatorie o procedură pentru fiecare activitate. Auditorul verifică că procedurile declarate există, sunt în vigoare și sunt RESPECTATE în practică. Discrepanța procedură ≠ practică = NC frecventă.",sec:[["→ Structura detaliată la SMC-09","POS-urile au structura detaliată la documentul SMC-09"]]},
+{id:"AE-13",title:"Evaluări și înregistrări furnizori externi",ref:"ISO 9001: §8.4",resp:["👤 Responsabil Achiziții","👤 Manager Calitate"],freq:"Actualizat anual",cc:"teal-card",tags:["gray-tag","teal-tag"],tip:"teal",sfat:"Auditorul verifică furnizorii critici. Asigurați că există criterii de selecție documentate, lista furnizorilor aprobați actualizată și că evaluările periodice au loc.",sec:[["→ Structura detaliată la SMC-16","Evaluarea furnizorilor are structura detaliată la documentul SMC-16"]]},
+{id:"AE-14",title:"Raportul de audit extern anterior",ref:"Organism de certificare",resp:["👤 Manager Calitate"],freq:"Arhivat / la solicitare",cc:"teal-card",tags:["teal-tag"],tip:"teal",sfat:"La auditul de supraveghere sau re-certificare, auditorul revizuiește constatările anterioare. Pregătiți un rezumat al situației fiecărei NC din auditul anterior.",sec:["TABEL SITUAȚIE NC DIN AUDITUL ANTERIOR",["Nr. NC (din raportul anterior)","Identificatorul din raportul organismului"],["Descrierea NC","Rezumat al neconformității"],["Acțiunea corectivă","Ce s-a făcut concret"],["Data implementării","Când a fost implementată"],["Dovezi","Documente disponibile pentru verificare"],["Status","Închisă / În curs (cu termen)"]]},
+{id:"AE-15",title:"Plan acțiuni pentru NC din auditul extern anterior",ref:"ISO 9001: §10.2",resp:["👤 Manager Calitate","👤 Responsabili Dept."],freq:"Demonstrarea închiderii",cc:"teal-card",tags:["teal-tag","gray-tag"],tip:"teal",sfat:"NC deschise din auditul extern anterior trebuie demonstrate ca implementate și eficace înainte de auditul următor. Un NC major neînchis poate duce la suspendarea certificatului.",sec:[["→ Structura identică cu AI-09","Planul CAPA pentru NC externe urmează structura documentului AI-09, adaptat cerințelor organismului de certificare"]]},
+]
+};
+
+const CAL=[
+{m:0,n:"Ianuarie",items:[{c:"c-gold",t:"Aprobarea programului anual de audit intern"},{c:"c-gold",t:"Revizuire obiective calitate — stabilire KPI noi"},{c:"c-gold",t:"Actualizare plan de comunicare internă"}]},
+{m:1,n:"Februarie",items:[{c:"c-gold",t:"Actualizare analiză de context (PESTLE/SWOT)"},{c:"c-gold",t:"Revizuire registru riscuri și oportunități"}]},
+{m:2,n:"Martie",items:[{c:"c-green",t:"Misiunea de audit intern 1 (procese suport)"},{c:"c-gold",t:"Evaluare furnizori critici — runda 1"},{c:"c-gold",t:"Raport satisfacție client — sem. 2 anterior"}]},
+{m:3,n:"Aprilie",items:[{c:"c-green",t:"Raport AI-1 + Plan CAPA aferent"},{c:"c-gold",t:"Monitorizare KPI calitate — T1"},{c:"c-teal",t:"Pregătire documente audit extern (dacă planificat)"}]},
+{m:4,n:"Mai",items:[{c:"c-green",t:"Misiunea de audit intern 2 (procese realizare)"},{c:"c-gold",t:"Verificare implementare CAPA din AI-1"}]},
+{m:5,n:"Iunie",items:[{c:"c-green",t:"Raport AI-2 + Plan CAPA aferent"},{c:"c-gold",t:"Monitorizare KPI calitate — T2"},{c:"c-gold",t:"Sondaj satisfacție clienți — sem. 1"},{c:"c-purple",t:"Analiză intermediară de management (opțional)"}]},
+{m:6,n:"Iulie",items:[{c:"c-green",t:"Misiunea de audit intern 3 (procese management)"},{c:"c-teal",t:"Audit de supraveghere extern (dacă planificat T3)"}]},
+{m:7,n:"August",items:[{c:"c-green",t:"Raport AI-3 + Plan CAPA aferent"},{c:"c-gold",t:"Monitorizare KPI calitate — T3"},{c:"c-gold",t:"Revizuire evaluare furnizori — runda 2"}]},
+{m:8,n:"Septembrie",items:[{c:"c-green",t:"Verificare implementare CAPA — toate misiunile"},{c:"c-gold",t:"Actualizare registru riscuri — semestrul 2"}]},
+{m:9,n:"Octombrie",items:[{c:"c-gold",t:"Monitorizare KPI calitate — T4"},{c:"c-gold",t:"Sondaj satisfacție clienți — sem. 2"},{c:"c-green",t:"Misiunea de audit intern 4 (dacă ciclu în 4 misiuni)"}]},
+{m:10,n:"Noiembrie",items:[{c:"c-purple",t:"Analiză de management anuală — pregătire date"},{c:"c-gold",t:"Raport anual neconformități și CAPA"},{c:"c-gold",t:"Evaluare anuală furnizori — finalizare"}]},
+{m:11,n:"Decembrie",items:[{c:"c-purple",t:"Ședința de analiză de management — aprobare PV"},{c:"c-gold",t:"Revizuire politică și obiective calitate — an următor"},{c:"c-gold",t:"Actualizare Manual Calitate dacă e cazul"},{c:"c-gold",t:"Arhivare dosare audit intern — an curent"}]},
+];
+
+function renderDocs(cat,gid){
+const g=document.getElementById(gid);
+D[cat].forEach(doc=>{
+const tagHTML=doc.resp.map((r,i)=>`<span class="resp-tag ${doc.tags[i]||'gray-tag'}">${r}</span>`).join('');
+const card=document.createElement('div');
+card.className=`doc-card ${doc.cc}`;
+card.innerHTML=`<div class="doc-header"><span class="doc-num">${doc.id}</span><span class="doc-title">${doc.title}</span></div><div class="doc-ref">${doc.ref}</div><div class="doc-meta">${tagHTML}<span class="freq-tag">${doc.freq}</span></div><div class="template-hint">📄 Click pentru structura documentului</div>`;
+card.addEventListener('click',()=>openModal(doc));
+g.appendChild(card);
+});
+}
+
+function openModal(doc){
+document.getElementById('modalTitle').textContent=`${doc.id} — ${doc.title}`;
+document.getElementById('modalRef').textContent=doc.ref;
+let html='';
+if(doc.sfat)html+=`<div class="modal-section"><div class="tip-box ${doc.tip}"><span class="tip-label">💡 Sfat practic ISO 9001:2015</span>${doc.sfat}</div></div>`;
+if(doc.sec&&doc.sec.length>0){
+html+=`<div class="modal-section"><h4>Structura minimă a documentului</h4><div class="template-block">`;
+let n=0;
+doc.sec.forEach(s=>{
+if(typeof s==='string'){html+=`<div class="template-row" style="margin-top:8px"><span class="tr-num"></span><span class="tr-field" style="color:rgba(245,240,232,.4);font-size:10px;letter-spacing:1.5px;text-transform:uppercase">${s}</span></div>`;}
+else{n++;html+=`<div class="template-row"><span class="tr-num">${n}.</span><span class="tr-field">${s[0]}</span><span class="tr-desc">${s[1]}</span></div>`;}
+});
+html+=`</div></div>`;
+}
+document.getElementById('modalBody').innerHTML=html;
+document.getElementById('modalOverlay').classList.add('open');
+document.body.style.overflow='hidden';
+}
+
+document.getElementById('modalClose').addEventListener('click',closeModal);
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function renderCalendar(){
+const g=document.getElementById('cal-grid');
+CAL.forEach(m=>{
+const col=document.createElement('div');col.className='cal-month';
+const items=m.items.map(it=>`<div class="cal-item ${it.c}"><div class="cal-item-dot"></div>${it.t}</div>`).join('');
+col.innerHTML=`<div class="cal-month-name">${m.n}</div><div class="cal-items">${items}</div>`;
+g.appendChild(col);
+});
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+btn.classList.add('active');
+document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+});
+});
+
+renderDocs('smc','grid-smc');
+renderDocs('intern','grid-intern');
+renderDocs('extern','grid-extern');
+renderCalendar();
+</script>
+</body>
+</html>
